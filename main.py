@@ -53,14 +53,12 @@ def handle_response(text: str) -> str:
 
     # Take the first source to display
     first_document = result['source_documents'][0]
-   
+
     metadata = first_document.metadata
 
     source = metadata['source']
 
-    bot_answer = answer + '\n \n' + f'Source: {source}'
-    
-    return bot_answer
+    return answer + '\n \n' + f'Source: {source}'
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     message_type: str = update.message.chat.type
@@ -69,11 +67,10 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     print(f'User in {message_type} asks: {text}')
 
     if message_type == 'group':
-        if BOT_USERNAME in text:
-            new_text: str = text.replace(BOT_USERNAME, '').strip()
-            response: str = handle_response(new_text)
-        else:
+        if BOT_USERNAME not in text:
             return
+        new_text: str = text.replace(BOT_USERNAME, '').strip()
+        response: str = handle_response(new_text)
     else:
         response: str = handle_response(text)
 
